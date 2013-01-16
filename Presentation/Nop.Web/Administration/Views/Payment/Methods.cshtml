@@ -1,0 +1,75 @@
+﻿@model Telerik.Web.Mvc.GridModel<PaymentMethodModel>
+@using Telerik.Web.Mvc.UI
+@{    
+    //page title
+    ViewBag.Title = T("Admin.Configuration.Payment.Methods").Text;
+}
+<div class="section-header">
+    <div class="title">
+        <img src="@Url.Content("~/Administration/Content/images/ico-configuration.png")" alt="" />
+        @T("Admin.Configuration.Payment.Methods")
+    </div>
+</div>
+<table class="adminContent">
+    <tr>
+        <td>
+            @(Html.Telerik().Grid<PaymentMethodModel>()
+                    .Name("paymentmethods-grid")
+                    .DataKeys(x =>
+                    {
+                        x.Add(y => y.SystemName).RouteKey("systemName");
+                    })
+                    .BindTo(Model.Data)
+                    .Columns(columns =>
+                    {
+                        columns.Bound(x => x.FriendlyName)
+                            .Width(150)
+                            .ReadOnly();
+                        columns.Template(
+                                @<div>
+                                    @Html.ActionLink(T("Admin.Configuration.Payment.Methods.Configure").Text, "ConfigureMethod", new { systemName = @item.SystemName })
+                                </div>
+                            )
+                            .ClientTemplate("<a href=\"ConfigureMethod?systemName=<#= SystemName #>\">" + T("Admin.Configuration.Payment.Methods.Configure").Text + "</a>")
+                            .Width(100)
+                            .Centered()
+                            .Title(T("Admin.Configuration.Payment.Methods.Configure").Text);
+                        columns.Bound(x => x.SystemName).Width(150).ReadOnly();
+                        columns.Bound(x => x.SupportCapture)
+                            .Template(x => x.SupportCapture.ToString().ToLower())
+                            .Width(100)
+                            .ReadOnly();
+                        columns.Bound(x => x.SupportRefund)
+                            .Template(x => x.SupportRefund.ToString().ToLower())
+                            .Width(100)
+                            .ReadOnly();
+                        columns.Bound(x => x.SupportPartiallyRefund)
+                            .Template(x => x.SupportPartiallyRefund.ToString().ToLower())
+                            .Width(100)
+                            .ReadOnly();
+                        columns.Bound(x => x.SupportVoid)
+                            .Template(x => x.SupportVoid.ToString().ToLower())
+                            .Width(100)
+                            .ReadOnly();
+                        columns.Bound(x => x.RecurringPaymentType)
+                            .Width(100)
+                            .ReadOnly();
+                        columns.Bound(x => x.DisplayOrder)
+                            .Width(100);
+                        columns.Bound(x => x.IsActive)
+                            .Template(x => x.IsActive.ToString().ToLower())
+                            .Width(100);
+                        columns.Command(commands =>
+                        {
+                            commands.Edit();
+                        }).Width(100);
+                    })
+                    .DataBinding(dataBinding =>
+                    {
+                        dataBinding.Ajax().Select("Methods", "Payment")
+                            .Update("MethodUpdate", "Payment");
+                    })
+                    .EnableCustomBinding(true))
+        </td>
+    </tr>
+</table>

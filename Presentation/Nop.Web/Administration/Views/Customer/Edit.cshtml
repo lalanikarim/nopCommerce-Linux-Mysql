@@ -1,0 +1,124 @@
+﻿@model CustomerModel
+@{
+    //page title
+    ViewBag.Title = @T("Admin.Customers.Customers.EditCustomerDetails").Text;
+}
+@using Telerik.Web.Mvc.UI
+@using (Html.BeginForm())
+{
+    <div class="section-header">
+        <div class="title">
+            <img src="@Url.Content("~/Administration/Content/images/ico-customers.png")" alt="" />
+            @T("Admin.Customers.Customers.EditCustomerDetails") - @Model.LastName @Model.FirstName
+            @Html.ActionLink("(" + T("Admin.Customers.Customers.BackToList") + ")", "List")
+        </div>
+        <div class="options">
+            <input type="submit" name="save" class="t-button" value="@T("Admin.Common.Save")" />
+            <input type="submit" name="save-continue" class="t-button" value="@T("Admin.Common.SaveContinue")" />
+            <input type="button" id="sendemail" class="t-button" value="@T("Admin.Customers.Customers.SendEmail")" />
+            <input type="button" id="sendprivatemessage" class="t-button" value="@T("Admin.Customers.Customers.SendPM")" />
+            <span id="customer-delete" class="t-button">@T("Admin.Common.Delete")</span>
+        </div>
+    </div>
+    @Html.Partial("_CreateOrUpdate", Model)
+}
+@Html.DeleteConfirmation("customer-delete")
+@*send email form*@
+@{Html.Telerik().Window()
+        .Name("sendemail-window")
+        .Title(T("Admin.Customers.Customers.SendEmail").Text)
+        .Content(@<text>
+    @using (Html.BeginForm("SendEmail", "Customer", new { id = Model.Id }))
+    {
+        <table style="text-align: left;">
+            <tr>
+                <td class="adminTitle">
+                    @Html.NopLabelFor(model => model.SendEmail.Subject):
+                </td>
+                <td class="adminData">
+                    @Html.EditorFor(model => model.SendEmail.Subject)
+                    @Html.ValidationMessageFor(model => model.SendEmail.Subject)
+                </td>
+            </tr>
+            <tr>
+                <td class="adminTitle">
+                    @Html.NopLabelFor(model => model.SendEmail.Body):
+                </td>
+                <td class="adminData">
+                    @Html.TextAreaFor(model => model.SendEmail.Body, new { style = "Width: 450px; Height: 350px;" })
+                    @Html.ValidationMessageFor(model => model.SendEmail.Body)
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <input type="submit" class="t-button" value="@T("Admin.Customers.Customers.SendEmail")" />
+                </td>
+            </tr>
+        </table>
+    }
+    </text>)
+        .Width(600)
+        .Draggable(true)
+        .Modal(true)
+        .Visible(false)
+        .Render();
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $("#sendemail").click(function (e) {
+            e.preventDefault();
+            $('#sendemail-window').data('tWindow').center().open();
+        });
+    });
+</script>
+
+@*send PM form*@
+@{Html.Telerik().Window()
+        .Name("sendprivatemessage-window")
+        .Title(T("Admin.Customers.Customers.SendPM").Text)
+        .Content(@<text>
+    @using (Html.BeginForm("SendPm", "Customer", new { id = Model.Id }))
+    {
+        <table style="text-align: left;">
+            <tr>
+                <td class="adminTitle">
+                    @Html.NopLabelFor(model => model.SendPm.Subject):
+                </td>
+                <td class="adminData">
+                    @Html.EditorFor(model => model.SendPm.Subject)
+                    @Html.ValidationMessageFor(model => model.SendPm.Subject)
+                </td>
+            </tr>
+            <tr>
+                <td class="adminTitle">
+                    @Html.NopLabelFor(model => model.SendPm.Message):
+                </td>
+                <td class="adminData">
+                    @Html.TextAreaFor(model => model.SendPm.Message, new { style = "Width: 350px; Height: 250px;" })
+                    @Html.ValidationMessageFor(model => model.SendPm.Message)
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <input type="submit" class="t-button" value="@T("Admin.Customers.Customers.SendPM")" />
+                </td>
+            </tr>
+        </table>
+    }
+    </text>)
+        .Width(500)
+        .Draggable(true)
+        .Modal(true)
+        .Visible(false)
+        .Render();
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $("#sendprivatemessage").click(function (e) {
+            e.preventDefault();
+            $('#sendprivatemessage-window').data('tWindow').center().open();
+        });
+    });
+</script>

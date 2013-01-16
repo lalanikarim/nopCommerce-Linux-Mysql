@@ -1,0 +1,66 @@
+﻿@model CheckoutConfirmModel
+@using Nop.Core.Domain.Orders;
+@using Nop.Web.Models.Checkout;
+@using Nop.Web.Models.Common;
+@{
+    Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+
+    //title
+    Html.AddTitleParts(T("PageTitle.Checkout").Text);
+}
+<div class="page checkout-page">
+    @Html.Action("CheckoutProgress", "Checkout", new { step = CheckoutProgressStep.Confirm })
+    <div class="clear">
+    </div>
+    <div class="page-title">
+        <h1>@T("Checkout.ConfirmYourOrder")</h1>
+    </div>
+    <div class="clear">
+    </div>
+    <div class="page-body checkout-data">
+        @using (Html.BeginRouteForm("CheckoutConfirm", FormMethod.Post, new { id = "confirm-order-form" }))
+        {
+            @Html.Widget("checkout_confirm_top")
+            
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    $('#confirm-order-form').submit(function () {
+                        $('input[type=submit]', this).attr('disabled', 'disabled');
+                    });
+                });
+            </script>
+            
+            <div class="confirm-order">
+                <div class="select-button">
+                    @if (!String.IsNullOrEmpty(Model.MinOrderTotalWarning))
+                    {
+                        @Model.MinOrderTotalWarning
+                    }
+                    else
+                    {
+                        <input type="submit" name="nextstep" value="@T("Checkout.ConfirmButton")" class="button-1 confirm-order-next-step-button" />
+                    }
+                </div>
+                @if (Model.Warnings.Count > 0)
+                {
+                    <div class="clear">
+                    </div>
+                    <div class="message-error">
+                        <ul>
+                            @for (int i = 0; i < Model.Warnings.Count; i++)
+                            {
+                                <li>@Model.Warnings[i]</li>
+                            }
+                        </ul>
+                    </div>
+                }
+            </div>  
+            @Html.Widget("checkout_confirm_bottom")
+        }
+        <div class="clear">
+        </div>
+        <div class="order-summary-body">
+            @Html.Action("OrderSummary", "ShoppingCart", new { prepareAndDisplayOrderReviewData = true })
+        </div>
+    </div>
+</div>

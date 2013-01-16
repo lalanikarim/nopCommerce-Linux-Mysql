@@ -1,0 +1,30 @@
+﻿@using Nop.Core;
+@using Nop.Core.Infrastructure;
+@using Nop.Core.Infrastructure.DependencyManagement;
+@{
+    //resources
+    Html.AppendScriptParts(@Url.Content("~/Scripts/jquery.unobtrusive-ajax.min.js"));
+    Html.AppendScriptParts(@Url.Content("~/Scripts/jquery-1.7.1.min.js"));
+}
+<!DOCTYPE html>
+<html @Html.Partial("LanguageAttributes")>
+<head>
+    <title>@Html.NopTitle(true)</title>
+    <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+    <meta name="description" content="@(Html.NopMetaDescription())" />
+    <meta name="keywords" content="@(Html.NopMetaKeywords())" />
+    @Html.NopCssFiles(ResourceLocation.Head)
+    @Html.NopScripts(ResourceLocation.Head)
+    @Html.NopCanonicalUrls()
+    @*Favicon - upload favicon.ico file to the root directory*@
+    @Html.Action("Favicon", "Common")
+    @Html.Widget("head_html_tag")
+</head>
+<body>
+    @Html.Widget("body_start_html_tag_after")
+    @RenderBody()
+    @Html.Widget("body_end_html_tag_before")
+    @Html.NopCssFiles(ResourceLocation.Foot)
+    @Html.NopScripts(ResourceLocation.Foot)
+</body>
+</html>

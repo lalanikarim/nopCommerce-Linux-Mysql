@@ -1,0 +1,21 @@
+﻿<div class="header">
+    <div class="header-logo">
+        <a href="@Url.RouteUrl("HomePage")" class="logo">&nbsp; </a>
+    </div>
+    <div class="header-links-wrapper">
+        @Html.Action("HeaderLinks", "Common")
+        @Html.Action("FlyoutShoppingCart", "ShoppingCart")
+    </div>
+    <div class="header-selectors-wrapper">
+        <div class="tax-display-type-selector">
+            @Html.Action("TaxTypeSelector", "Common")
+        </div>
+        <div class="currency-selector">
+            @Html.Action("CurrencySelector", "Common")
+        </div>
+        <div class="language-selector">
+            @Html.Action("LanguageSelector", "Common")
+        </div>
+        @Html.Widget("header_selectors")
+    </div>
+</div>

@@ -1,0 +1,78 @@
+﻿@model CheckoutShippingMethodModel
+@using Nop.Core.Domain.Orders;
+@using Nop.Web.Models.Checkout;
+@using Nop.Web.Models.Common;
+@{
+    Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+
+    //title
+    Html.AddTitleParts(T("PageTitle.Checkout").Text);
+}
+<div class="page checkout-page">
+    @Html.Action("CheckoutProgress", "Checkout", new { step = CheckoutProgressStep.Shipping })
+    <div class="clear">
+    </div>
+    <div class="page-title">
+        <h1>@T("Checkout.SelectShippingMethod")</h1>
+    </div>
+    <div class="clear">
+    </div>
+    <div class="page-body checkout-data">
+        @using (Html.BeginRouteForm("CheckoutShippingMethod", FormMethod.Post))
+        {
+            @Html.Widget("checkout_shipping_method_top")
+            <div class="shipping-options">
+                @if (Model.Warnings.Count == 0)
+                {
+                    <div>
+                        @for (int i = 0; i < Model.ShippingMethods.Count; i++)
+                        {
+                            var shippingMethod = Model.ShippingMethods[i];
+                            <div class="shipping-option-item">
+                                <div class="option-name">
+                                    <input id="shippingoption_@(i)" type="radio" name="shippingoption" value="@(shippingMethod.Name)___@(shippingMethod.ShippingRateComputationMethodSystemName)"  @(shippingMethod.Selected ? Html.Raw(" checked=\"checked\"") : null) />
+                                    <label for="shippingoption_@(i)">@shippingMethod.Name (@shippingMethod.Fee)</label>
+                                </div>
+                                @if (!String.IsNullOrEmpty(shippingMethod.Description))
+                                {
+                                    <div class="option-description">
+                                        @Html.Raw(shippingMethod.Description)
+                                    </div>
+                                }
+                            </div>
+                        }
+                        <div class="clear">
+                        </div>
+                        <div class="select-button">
+                            <input type="submit" name="nextstep" value="@T("Checkout.NextButton")" class="button-1 shipping-method-next-step-button" />
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="clear">
+                    </div>
+                    <div class="message-error">
+                        <ul>
+                            @for (int i = 0; i < Model.Warnings.Count; i++)
+                            {
+                                <li>@Model.Warnings[i]</li>
+                            }
+                        </ul>
+                    </div>
+                }
+            </div>
+            @Html.Widget("checkout_shipping_method_bottom")
+        }
+        <div class="clear">
+        </div>
+        <div class="order-summary-title">
+            @T("Checkout.OrderSummary")
+        </div>
+        <div class="clear">
+        </div>
+        <div class="order-summary-body">
+            @Html.Action("OrderSummary", "ShoppingCart")
+        </div>
+    </div>
+</div>

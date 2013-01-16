@@ -1,0 +1,31 @@
+﻿@model ProductVariantModel
+@{
+    var fullProductName = "";
+    if (!string.IsNullOrWhiteSpace(Model.Name))
+    {
+        fullProductName = Model.ProductName + " (" + Model.Name + ")";
+    }
+    else
+    {
+        fullProductName =  Model.ProductName;
+    }
+
+    //page title
+    ViewBag.Title = string.Format(T("Admin.Catalog.Products.Variants.EditProductVariantDetails").Text, fullProductName);
+}
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "productvariant-form" }))
+{
+    <div class="section-header">
+        <div class="title">
+            <img src="@Url.Content("~/Administration/Content/images/ico-catalog.png")" alt="" />
+            @string.Format(T("Admin.Catalog.Products.Variants.EditProductVariantDetails").Text, fullProductName) @Html.ActionLink("(" + T("Admin.Catalog.Products.Variants.BackToProduct") + ")", "Edit", "Product", new { Id = Model.ProductId }, null)
+        </div>
+        <div class="options">
+            <input type="submit" name="save" class="t-button" value="@T("Admin.Common.Save")" />
+            <input type="submit" name="save-continue" class="t-button" value="@T("Admin.Common.SaveContinue")" />
+            <span id="productvariant-delete" class="t-button">@T("Admin.Common.Delete")</span>
+        </div>
+    </div>
+    @Html.Partial("_CreateOrUpdate", Model)
+}
+@Html.DeleteConfirmation("productvariant-delete")

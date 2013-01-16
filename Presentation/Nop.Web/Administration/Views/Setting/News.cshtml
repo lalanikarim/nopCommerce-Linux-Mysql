@@ -1,0 +1,84 @@
+﻿@model NewsSettingsModel
+@using Telerik.Web.Mvc.UI;
+@{
+    //page title
+    ViewBag.Title = @T("Admin.Configuration.Settings.News").Text;
+}
+@using (Html.BeginForm())
+{
+    <div class="section-header">
+        <div class="title">
+            <img src="@Url.Content("~/Administration/Content/images/ico-configuration.png")" alt="" />
+            @T("Admin.Configuration.Settings.News")
+        </div>
+        <div class="options">
+            <input type="submit" name="save" class="t-button" value="@T("Admin.Common.Save")" />
+        </div>
+    </div>
+@Html.ValidationSummary(false)
+    <table class="adminContent">
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.Enabled):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.Enabled)
+                @Html.ValidationMessageFor(model => model.Enabled)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.AllowNotRegisteredUsersToLeaveComments):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.AllowNotRegisteredUsersToLeaveComments)
+                @Html.ValidationMessageFor(model => model.AllowNotRegisteredUsersToLeaveComments)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.NotifyAboutNewNewsComments):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.NotifyAboutNewNewsComments)
+                @Html.ValidationMessageFor(model => model.NotifyAboutNewNewsComments)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.ShowNewsOnMainPage):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.ShowNewsOnMainPage)
+                @Html.ValidationMessageFor(model => model.ShowNewsOnMainPage)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.MainPageNewsCount):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.MainPageNewsCount)
+                @Html.ValidationMessageFor(model => model.MainPageNewsCount)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.NewsArchivePageSize):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.NewsArchivePageSize)
+                @Html.ValidationMessageFor(model => model.NewsArchivePageSize)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.ShowHeaderRssUrl):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.ShowHeaderRssUrl)
+                @Html.ValidationMessageFor(model => model.ShowHeaderRssUrl)
+            </td>
+        </tr>
+    </table>
+}

@@ -1,0 +1,36 @@
+﻿@model Telerik.Web.Mvc.GridModel<ProductAttributeModel>
+@using Telerik.Web.Mvc.UI
+@{  
+    //page title
+    ViewBag.Title = @T("Admin.Catalog.Attributes.ProductAttributes").Text;
+}
+<div class="section-header">
+    <div class="title">
+        <img src="@Url.Content("~/Administration/Content/images/ico-catalog.png")" alt="" />
+        @T("Admin.Catalog.Attributes.ProductAttributes")
+    </div>
+    <div class="options">
+        <a href="@Url.Action("Create")" class="t-button">@T("Admin.Common.AddNew")</a>
+    </div>
+</div>
+<table class="adminContent">
+    <tr>
+        <td>
+            @(Html.Telerik().Grid<ProductAttributeModel>(Model.Data)
+                    .Name("productattributes-grid")
+                    .Columns(columns =>
+                    {
+                        columns.Bound(x => x.Name)
+                            .Width(300);
+                        columns.Bound(x => x.Id)
+                            .Width(50)
+                            .Centered()
+                            .Template(x => Html.ActionLink(T("Admin.Common.Edit").Text, "Edit", new { id = x.Id }))
+                            .ClientTemplate("<a href=\"Edit/<#= Id #>\">" + T("Admin.Common.Edit").Text + "</a>")
+                            .Title(T("Admin.Common.Edit").Text);
+                    })
+                    .DataBinding(dataBinding => dataBinding.Ajax().Select("List", "ProductAttribute"))
+                    .EnableCustomBinding(true))
+        </td>
+    </tr>
+</table>

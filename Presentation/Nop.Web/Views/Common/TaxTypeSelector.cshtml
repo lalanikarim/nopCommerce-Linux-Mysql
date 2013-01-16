@@ -1,0 +1,21 @@
+﻿@model TaxTypeSelectorModel
+@using Nop.Core.Domain.Tax;
+@using Nop.Web.Models.Common;
+@if (Model.Enabled)
+{
+    var taxTypes = new List<SelectListItem>();
+    taxTypes.Add(new SelectListItem()
+    {
+        Text = T("Tax.Inclusive").Text,
+        Value = @Url.RouteUrl("ChangeTaxType", new { customertaxtype = ((int)TaxDisplayType.IncludingTax) }),
+        Selected = Model.CurrentTaxType == TaxDisplayType.IncludingTax
+    });
+    taxTypes.Add(new SelectListItem()
+    {
+        Text = T("Tax.Exclusive").Text,
+        Value = @Url.RouteUrl("ChangeTaxType", new { customertaxtype = ((int)TaxDisplayType.ExcludingTax) }),
+        Selected = Model.CurrentTaxType == TaxDisplayType.ExcludingTax
+    });
+    
+    @Html.DropDownList("customerTaxType", taxTypes, new { onchange = "setLocation(this.value);" })
+}

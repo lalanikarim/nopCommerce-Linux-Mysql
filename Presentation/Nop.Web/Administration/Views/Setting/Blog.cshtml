@@ -1,0 +1,75 @@
+﻿@model BlogSettingsModel
+@using Telerik.Web.Mvc.UI;
+@{
+    //page title
+    ViewBag.Title = @T("Admin.Configuration.Settings.Blog").Text;
+}
+@using (Html.BeginForm())
+{
+    <div class="section-header">
+        <div class="title">
+            <img src="@Url.Content("~/Administration/Content/images/ico-configuration.png")" alt="" />
+            @T("Admin.Configuration.Settings.Blog")
+        </div>
+        <div class="options">
+            <input type="submit" name="save" class="t-button" value="@T("Admin.Common.Save")" />
+        </div>
+    </div>
+@Html.ValidationSummary(false)
+    <table class="adminContent">
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.Enabled):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.Enabled)
+                @Html.ValidationMessageFor(model => model.Enabled)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.PostsPageSize):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.PostsPageSize)
+                @Html.ValidationMessageFor(model => model.PostsPageSize)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.AllowNotRegisteredUsersToLeaveComments):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.AllowNotRegisteredUsersToLeaveComments)
+                @Html.ValidationMessageFor(model => model.AllowNotRegisteredUsersToLeaveComments)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.NotifyAboutNewBlogComments):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.NotifyAboutNewBlogComments)
+                @Html.ValidationMessageFor(model => model.NotifyAboutNewBlogComments)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.NumberOfTags):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.NumberOfTags)
+                @Html.ValidationMessageFor(model => model.NumberOfTags)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.ShowHeaderRssUrl):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.ShowHeaderRssUrl)
+                @Html.ValidationMessageFor(model => model.ShowHeaderRssUrl)
+            </td>
+        </tr>
+    </table>
+}

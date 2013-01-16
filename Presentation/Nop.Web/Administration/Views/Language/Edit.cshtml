@@ -1,0 +1,82 @@
+﻿@model LanguageModel
+@using Telerik.Web.Mvc.UI
+@{
+    //page title
+    ViewBag.Title = @T("Admin.Configuration.Languages.EditLanguageDetails").Text;
+}
+@using (Html.BeginForm())
+{
+    <div class="section-header">
+        <div class="title">
+            <img src="@Url.Content("~/Administration/Content/images/ico-configuration.png")" alt="" />
+            @T("Admin.Configuration.Languages.EditLanguageDetails") - @Model.Name @Html.ActionLink("(" + T("Admin.Configuration.Languages.BackToList") + ")", "List")
+        </div>
+        <div class="options">
+            <input type="submit" name="save" class="t-button" value="@T("Admin.Common.Save")" />
+            <input type="submit" name="save-continue" class="t-button" value="@T("Admin.Common.SaveContinue")" />
+            <a href="@Url.Action("ExportXml", new { id = Model.Id })" class="t-button">@T("Admin.Configuration.Languages.Export")</a>
+            <input type="button" id="importxml" class="t-button" value="@T("Admin.Configuration.Languages.Import")" />
+            <span id="language-delete" class="t-button">@T("Admin.Common.Delete")</span>
+        </div>
+    </div>
+    @Html.Partial("_CreateOrUpdate", Model)
+}
+@Html.DeleteConfirmation("language-delete")
+@*import resources form*@
+@{Html.Telerik().Window()
+        .Name("importxml-window")
+        .Title(T("Admin.Configuration.Languages.Import").Text)
+        .Content(@<text>
+    @using (Html.BeginForm("ImportXml", "Language", new { id = Model.Id }, FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        <table style="text-align: left;">
+            <tr>
+                <td>
+                    @T("Admin.Configuration.Languages.XmlFile"):
+                </td>
+                <td>
+                    <input type="file" id="importxmlfile" name="importxmlfile" />
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <strong>@T("Admin.Configuration.Languages.XmlFile.Note1")</strong>
+                    <br />
+                    <strong>@T("Admin.Configuration.Languages.XmlFile.Note2")</strong>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <input id="importxmlsubmit" type="submit" class="t-button" value="@T("Admin.Configuration.Languages.Import")" />
+                </td>
+            </tr>
+        </table>
+    }
+    </text>)
+        .Width(400)
+        .Draggable(true)
+        .Modal(true)
+        .Visible(false)
+        .Render();
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $("#importxml").click(function (e) {
+            e.preventDefault();
+            $('#importxml-window').data('tWindow').center().open();
+        });
+    });
+</script>
+
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#installationform').submit(function () {
+                if ($('form').valid()) {
+                    $('input[type=submit]', this).attr('disabled', 'disabled');
+                }
+            });
+        });
+
+    </script>

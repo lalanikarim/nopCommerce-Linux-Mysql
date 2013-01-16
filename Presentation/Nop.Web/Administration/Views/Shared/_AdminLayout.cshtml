@@ -1,0 +1,146 @@
+﻿@using Telerik.Web.Mvc.UI;
+@using Telerik.Web.Mvc;
+@using Nop.Services.Customers;
+@using Nop.Web.Framework.UI;
+@using Nop.Core;
+@{
+    var currentCustomer = this.WorkContext.CurrentCustomer;
+    var usernamesEnabled = EngineContext.Current.Resolve<Nop.Core.Domain.Customers.CustomerSettings>().UsernamesEnabled;
+    var currentVersion = NopVersion.CurrentVersion;
+    
+    //resources
+    Html.AppendCssFileParts(@Url.Content("~/Administration/Content/styles.css"));
+    Html.AppendScriptParts(@Url.Content("~/Administration/Scripts/admin.common.js"));
+    Html.AppendScriptParts(@Url.Content("~/Administration/Scripts/jquery.validate.unobtrusive.min.js"));
+    Html.AppendScriptParts(@Url.Content("~/Administration/Scripts/jquery.validate.min.js"));
+    Html.AppendScriptParts(@Url.Content("~/Administration/Scripts/jquery.unobtrusive-ajax.min.js"));
+    Html.AppendScriptParts(@Url.Content("~/Administration/Scripts/jquery-1.7.1.min.js"));
+
+    //page title
+    string adminPageTitle = "";
+    if (!String.IsNullOrWhiteSpace(ViewBag.Title))
+    {
+        adminPageTitle = ViewBag.Title + " / ";
+    }
+    adminPageTitle += @T("Admin.PageTitle").Text;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>@adminPageTitle</title>
+    <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+    @Html.NopCssFiles(ResourceLocation.Head)
+    @Html.NopScripts(ResourceLocation.Head)
+</head>
+<body>
+    <div class="master-wrapper-page">
+        <div class="master-wrapper-content">
+            @if (IsSectionDefined("header"))
+            {
+                @RenderSection("header")
+            }
+            else
+            {
+                <script type="text/javascript">
+                    $(document).ready(function () {
+                        $("#restart-application").click(function (e) {
+                            showThrobber('@T("Admin.Header.RestartApplication.Progress")');
+                        });
+                    });
+                </script>
+                <div class="header">
+                    <div class="logo">
+                    </div>
+                    @Html.Widget("admin_header_before")
+                    <div class="languageselector">
+                        @Html.Action("LanguageSelector", "Common")
+                    </div>
+                    @Html.Widget("admin_header_middle")
+                    <div class="links">
+                        @Html.ActionLink(T("Admin.Header.PublicStore").Text, "Index", "Home", new { area = "" }, null)
+                        <span class="separator">|</span>                        
+                        @Html.ActionLink(T("Admin.Header.ClearCache").Text, "ClearCache", "Common")
+                        <span class="separator">|</span>                        
+                        @Html.ActionLink(T("Admin.Header.RestartApplication").Text, "RestartApplication", "Common", null, new { id = "restart-application" })
+                    </div>
+                    <div class="login-info">
+                        @if (currentCustomer != null && currentCustomer.IsRegistered())
+                        {
+                            @string.Format(T("Admin.Header.LoggedInAs").Text, usernamesEnabled ? currentCustomer.Username : currentCustomer.Email)
+                            <text>, @Html.ActionLink(T("Admin.Header.Logout").Text, "Logout", "Customer", new { area = "" }, null)</text> 
+                        }
+                    </div>
+                    <div class="version">
+                        <span>nopCommerce @currentVersion</span>
+                    </div>
+                    @Html.Widget("admin_header_after")
+                </div>
+                <div class="clear">
+                </div>
+            }
+            @if (IsSectionDefined("headermenu"))
+            {
+                @RenderSection("headermenu")
+            }
+            else
+            {
+                <div class="header-menu">
+                    @Html.Partial("Menu")
+                </div>
+            }
+            @if (IsSectionDefined("statusbar"))
+            {
+                @RenderSection("statusbar")
+            }
+            else
+            {
+                <div class="status-bar">
+                    <div class="help">
+                        @(EngineContext.Current.Resolve<Nop.Services.Helpers.IDateTimeHelper>().ConvertToUserTime(DateTime.Now).ToString("f"))
+                    </div>
+                    <div class="breadcrumb">
+                        <!-- SiteMapPath here-->
+                    @Html.Widget("admin_breadcrumb")
+                    </div>
+                </div>
+                <div class="clear">
+                </div>
+            }
+            <div class="content">
+                @Html.Partial("_Notifications")
+                <div class="cph">
+                    @RenderBody()
+                </div>
+            </div>
+            <div class="throbber">
+                <div class="curtain">
+                </div>
+                <div class="curtain-content">
+                    <div>
+                        <h1 class="throbber-header">Wait...</h1>
+                        <p>
+                            <img src="@Url.Content("~/administration/content/images/throbber-synchronizing.gif")" alt="" />
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--These need to be at the end of the page to ensure that all the controls requiring scripts have been rendered-->
+    @(Html.Telerik().StyleSheetRegistrar()
+        .DefaultGroup(group => group
+            .Add("telerik.common.min.css")
+            .Add("telerik.vista.min.css")
+            .Add("telerik.rtl.min.css")
+            //uncomment the lines below in order to combine and compress CSS files
+            //.Combined(true)
+            //.Compress(true)
+            ))
+    @(Html.Telerik().ScriptRegistrar()
+            .jQuery(false)
+            .jQueryValidation(false)
+            )
+    @Html.NopCssFiles(ResourceLocation.Foot)
+    @Html.NopScripts(ResourceLocation.Foot)
+</body>
+</html>

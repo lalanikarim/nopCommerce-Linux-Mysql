@@ -1,0 +1,109 @@
+﻿@model CurrencyModel
+@using Telerik.Web.Mvc.UI;
+@{
+    var cultures = System.Globalization.CultureInfo.GetCultures(System.Globalization.CultureTypes.SpecificCultures).ToList();
+}
+@Html.ValidationSummary(true)
+@Html.HiddenFor(model => model.Id)
+@(Html.LocalizedEditor<CurrencyModel, CurrencyLocalizedModel>("currency-info-localized",
+                @<table class="adminContent">
+                    <tr>
+                        <td class="adminTitle">
+                            @Html.NopLabelFor(model => model.Locales[item].Name):
+                        </td>
+                        <td class="adminData">
+                            @Html.EditorFor(model => Model.Locales[item].Name)
+                            @Html.ValidationMessageFor(model => model.Locales[item].Name)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            @Html.HiddenFor(model => model.Locales[item].LanguageId)
+                        </td>
+                    </tr>
+                </table>
+                ,
+                @<table class="adminContent">
+                    <tr>
+                        <td class="adminTitle">
+                            @Html.NopLabelFor(model => model.Name):
+                        </td>
+                        <td class="adminData">
+                            @Html.EditorFor(model => model.Name)
+                            @Html.ValidationMessageFor(model => model.Name)
+                        </td>
+                    </tr>
+                </table>
+            ))
+<table class="adminContent">
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.CurrencyCode):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.CurrencyCode)
+            @Html.ValidationMessageFor(model => model.CurrencyCode)
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.Rate):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.Rate)
+            @Html.ValidationMessageFor(model => model.Rate)
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.DisplayLocale):
+        </td>
+        <td class="adminData">
+            @(Html.Telerik().ComboBoxFor(x => x.DisplayLocale)
+                .BindTo(cultures.Select(x =>
+                    new DropDownItem { Value = x.IetfLanguageTag, Text = string.Format("{0}. {1}", x.IetfLanguageTag, x.EnglishName) }))
+                .Encode(true)
+                .AutoFill(false)
+                .Filterable(x => { x.Enabled(false); }))
+            @Html.ValidationMessageFor(model => model.DisplayLocale)
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.CustomFormatting):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.CustomFormatting)
+            @Html.ValidationMessageFor(model => model.CustomFormatting)
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.Published):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.Published)
+            @Html.ValidationMessageFor(model => model.Published)
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.DisplayOrder):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.DisplayOrder)
+            @Html.ValidationMessageFor(model => model.DisplayOrder)
+        </td>
+    </tr>
+    @if (Model.Id > 0)
+    {
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.CreatedOn):
+            </td>
+            <td class="adminData">
+                @Html.DisplayFor(model => model.CreatedOn)
+            </td>
+        </tr>
+    }
+</table>

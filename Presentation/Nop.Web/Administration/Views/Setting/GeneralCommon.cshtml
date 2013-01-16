@@ -1,0 +1,576 @@
+﻿@model GeneralCommonSettingsModel
+@using Telerik.Web.Mvc.UI;
+@using Nop.Core.Domain.Customers;
+@using Nop.Core.Domain.Security;
+@{
+    //page title
+    ViewBag.Title = @T("Admin.Configuration.Settings.GeneralCommon").Text;
+}
+@using (Html.BeginForm())
+{
+    <div class="section-header">
+        <div class="title">
+            <img src="@Url.Content("~/Administration/Content/images/ico-configuration.png")" alt="" />
+            @T("Admin.Configuration.Settings.GeneralCommon")
+        </div>
+        <div class="options">
+            <input type="submit" name="save" class="t-button" value="@T("Admin.Common.Save")" />
+        </div>
+    </div>
+        
+    
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $("#@Html.FieldIdFor(model => model.StoreInformationSettings.StoreClosed)").click(toggleStoreClosed);
+            $("#@Html.FieldIdFor(model => model.StoreInformationSettings.MobileDevicesSupported)").click(toggleMobileDevicesSupported);
+            $("#@Html.FieldIdFor(model => model.SecuritySettings.CaptchaEnabled)").click(toggleReCaptcha);
+            $("#@Html.FieldIdFor(model => model.SecuritySettings.UseSsl)").click(toggleSSL);
+
+            toggleStoreClosed();
+            toggleMobileDevicesSupported();
+            toggleReCaptcha();
+            toggleSSL();
+        });
+
+        function toggleStoreClosed() {
+            if ($('#@Html.FieldIdFor(model => model.StoreInformationSettings.StoreClosed)').is(':checked')) {
+                $('#pnlStoreClosedAllowForAdmins').show();
+            }
+            else {
+                $('#pnlStoreClosedAllowForAdmins').hide();
+            }
+        }
+
+        function toggleMobileDevicesSupported() {
+            if ($('#@Html.FieldIdFor(model => model.StoreInformationSettings.MobileDevicesSupported)').is(':checked')) {
+                $('#pnlDefaultStoreThemeForMobileDevices').show();
+            }
+            else {
+                $('#pnlDefaultStoreThemeForMobileDevices').hide();
+            }
+        }
+
+        function toggleReCaptcha() {
+            if ($('#@Html.FieldIdFor(model => model.SecuritySettings.CaptchaEnabled)').is(':checked')) {
+                $('#ssCaptchaShowOnLoginPagepnl').show();
+                $('#ssCaptchaShowOnRegistrationPagepnl').show();
+                $('#ssCaptchaShowOnContactUsPagepnl').show();
+                $('#ssCaptchaShowOnEmailWishlistToFriendPagepnl').show();
+                $('#ssCaptchaShowOnEmailProductToFriendPagepnl').show();
+                $('#ssCaptchaShowOnBlogCommentPagepnl').show();
+                $('#ssCaptchaShowOnNewsCommentPagepnl').show();
+                $('#ssCaptchaShowOnProductReviewPagepnl').show();
+                $('#ssReCaptchaPublicKeypnl').show();
+                $('#ssReCaptchaPrivateKeypnl').show();
+            }
+            else {
+                $('#ssCaptchaShowOnLoginPagepnl').hide();
+                $('#ssCaptchaShowOnRegistrationPagepnl').hide();
+                $('#ssCaptchaShowOnContactUsPagepnl').hide();
+                $('#ssCaptchaShowOnEmailWishlistToFriendPagepnl').hide();
+                $('#ssCaptchaShowOnEmailProductToFriendPagepnl').hide();
+                $('#ssCaptchaShowOnBlogCommentPagepnl').hide();
+                $('#ssCaptchaShowOnNewsCommentPagepnl').hide();
+                $('#ssCaptchaShowOnProductReviewPagepnl').hide();
+                $('#ssReCaptchaPublicKeypnl').hide();
+                $('#ssReCaptchaPrivateKeypnl').hide();
+            }
+        }
+
+        function toggleSSL() {
+            if ($('#@Html.FieldIdFor(model => model.SecuritySettings.UseSsl)').is(':checked')) {
+                $('#ssSharedSslUrlpnl').show();
+                $('#ssNonSharedSslUrlpnl').show();
+            }
+            else {
+                $('#ssSharedSslUrlpnl').hide();
+                $('#ssNonSharedSslUrlpnl').hide();
+            }
+        }
+    </script>
+    
+    @Html.ValidationSummary(false)
+
+    
+    @Html.Telerik().TabStrip().Name("generalsettings-edit").Items(x =>
+{
+    var tabStoreInformationSettings = x.Add().Text(T("Admin.Configuration.Settings.GeneralCommon.StoreInformationSettings").Text).Content(TabStoreInformationSettings().ToHtmlString());
+    var tabSEOSettings = x.Add().Text(T("Admin.Configuration.Settings.GeneralCommon.SEOSettings").Text).Content(TabSEOSettings().ToHtmlString());
+    var tabSecuritySettings = x.Add().Text(T("Admin.Configuration.Settings.GeneralCommon.SecuritySettings").Text).Content(TabSecuritySettings().ToHtmlString());
+    var tabPdfSettings = x.Add().Text(T("Admin.Configuration.Settings.GeneralCommon.PdfSettings").Text).Content(TabPdfSettings().ToHtmlString());
+    var tabLocalizationSettings = x.Add().Text(T("Admin.Configuration.Settings.GeneralCommon.LocalizationSettings").Text).Content(TabLocalizationSettings().ToHtmlString());
+    var tabFullTextSettings = x.Add().Text(T("Admin.Configuration.Settings.GeneralCommon.FullTextSettings").Text).Content(TabFullTextSettings().ToHtmlString());
+
+    var selectedTab = (string)ViewData["selectedTab"];
+    switch (selectedTab)
+    {
+        case "storeinformation":
+            tabStoreInformationSettings.Selected(true);
+            break;
+        case "seo":
+            tabSEOSettings.Selected(true);
+            break;
+        case "security":
+            tabSecuritySettings.Selected(true);
+            break;
+        case "pdf":
+            tabPdfSettings.Selected(true);
+            break;
+        case "localization":
+            tabLocalizationSettings.Selected(true);
+            break;
+        case "fulltext":
+            tabFullTextSettings.Selected(true);
+            break;
+        default:
+            tabStoreInformationSettings.Selected(true);
+            break;
+    }
+
+    //generate an event
+    EngineContext.Current.Resolve<IEventPublisher>().Publish(new AdminTabStripCreated(x, "generalsettings-edit"));
+})
+}
+@helper TabStoreInformationSettings()
+    {
+    <table class="adminContent">
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.StoreInformationSettings.StoreName):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.StoreInformationSettings.StoreName)
+                @Html.ValidationMessageFor(model => model.StoreInformationSettings.StoreName)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.StoreInformationSettings.StoreUrl):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.StoreInformationSettings.StoreUrl)
+                @Html.ValidationMessageFor(model => model.StoreInformationSettings.StoreUrl)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.StoreInformationSettings.StoreClosed):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.StoreInformationSettings.StoreClosed)
+                @Html.ValidationMessageFor(model => model.StoreInformationSettings.StoreClosed)
+            </td>
+        </tr>
+        <tr id="pnlStoreClosedAllowForAdmins">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.StoreInformationSettings.StoreClosedAllowForAdmins):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.StoreInformationSettings.StoreClosedAllowForAdmins)
+                @Html.ValidationMessageFor(model => model.StoreInformationSettings.StoreClosedAllowForAdmins)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.StoreInformationSettings.DefaultStoreThemeForDesktops):
+            </td>
+            <td class="adminData">
+                @Html.DropDownListFor(model => model.StoreInformationSettings.DefaultStoreThemeForDesktops, Model.StoreInformationSettings.AvailableStoreThemesForDesktops)
+                @Html.ValidationMessageFor(model => model.StoreInformationSettings.DefaultStoreThemeForDesktops)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.StoreInformationSettings.AllowCustomerToSelectTheme):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.StoreInformationSettings.AllowCustomerToSelectTheme)
+                @Html.ValidationMessageFor(model => model.StoreInformationSettings.AllowCustomerToSelectTheme)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.StoreInformationSettings.MobileDevicesSupported):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.StoreInformationSettings.MobileDevicesSupported)
+                @Html.ValidationMessageFor(model => model.StoreInformationSettings.MobileDevicesSupported)
+            </td>
+        </tr>
+        <tr id="pnlDefaultStoreThemeForMobileDevices">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.StoreInformationSettings.DefaultStoreThemeForMobileDevices):
+            </td>
+            <td class="adminData">
+                @Html.DropDownListFor(model => model.StoreInformationSettings.DefaultStoreThemeForMobileDevices, Model.StoreInformationSettings.AvailableStoreThemesForMobileDevices)
+                @Html.ValidationMessageFor(model => model.StoreInformationSettings.DefaultStoreThemeForMobileDevices)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.StoreInformationSettings.DisplayEuCookieLawWarning):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.StoreInformationSettings.DisplayEuCookieLawWarning)
+                @Html.ValidationMessageFor(model => model.StoreInformationSettings.DisplayEuCookieLawWarning)
+            </td>
+        </tr>
+    </table>
+}
+@helper TabSEOSettings()
+    {
+    
+    <table class="adminContent">
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.SeoSettings.PageTitleSeparator):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.SeoSettings.PageTitleSeparator)
+                @Html.ValidationMessageFor(model => model.SeoSettings.PageTitleSeparator)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.SeoSettings.PageTitleSeoAdjustment):
+            </td>
+            <td class="adminData">
+                @(Html.Telerik().DropDownListFor(model => model.SeoSettings.PageTitleSeoAdjustment)
+                            .BindTo(Model.SeoSettings.PageTitleSeoAdjustmentValues)
+                            .HtmlAttributes(new { style = "width:255px" })
+                )
+                @Html.ValidationMessageFor(model => model.SeoSettings.PageTitleSeoAdjustment)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.SeoSettings.DefaultTitle):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.SeoSettings.DefaultTitle)
+                @Html.ValidationMessageFor(model => model.SeoSettings.DefaultTitle)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.SeoSettings.DefaultMetaKeywords):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.SeoSettings.DefaultMetaKeywords)
+                @Html.ValidationMessageFor(model => model.SeoSettings.DefaultMetaKeywords)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.SeoSettings.DefaultMetaDescription):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.SeoSettings.DefaultMetaDescription)
+                @Html.ValidationMessageFor(model => model.SeoSettings.DefaultMetaDescription)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.SeoSettings.ConvertNonWesternChars):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.SeoSettings.ConvertNonWesternChars)
+                @Html.ValidationMessageFor(model => model.SeoSettings.ConvertNonWesternChars)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.SeoSettings.CanonicalUrlsEnabled):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.SeoSettings.CanonicalUrlsEnabled)
+                @Html.ValidationMessageFor(model => model.SeoSettings.CanonicalUrlsEnabled)
+            </td>
+        </tr>
+    </table>
+}
+@helper TabSecuritySettings()
+    {
+    <table class="adminContent">
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.SecuritySettings.EncryptionKey):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.SecuritySettings.EncryptionKey)
+                @Html.ValidationMessageFor(model => model.SecuritySettings.EncryptionKey)
+                <input type="submit" name="changeencryptionkey" value="@T("Admin.Common.Change")" id="changeencryptionkey" class="adminButton" onclick="return confirm('@T("Admin.Common.AreYouSure")');" />
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.SecuritySettings.AdminAreaAllowedIpAddresses):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.SecuritySettings.AdminAreaAllowedIpAddresses)
+                @Html.ValidationMessageFor(model => model.SecuritySettings.AdminAreaAllowedIpAddresses)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.SecuritySettings.HideAdminMenuItemsBasedOnPermissions):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.SecuritySettings.HideAdminMenuItemsBasedOnPermissions)
+                @Html.ValidationMessageFor(model => model.SecuritySettings.HideAdminMenuItemsBasedOnPermissions)
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <hr />
+                <br />
+                A CAPTCHA is a program that can tell whether its user is a human or a computer.
+                You've probably seen them — colorful images with distorted text at the bottom of
+                Web registration forms. CAPTCHAs are used by many websites to prevent abuse from
+                "bots," or automated programs usually written to generate spam. No computer program
+                can read distorted text as well as humans can, so bots cannot navigate sites protected
+                by CAPTCHAs. nopCommerce uses <a href="http://www.google.com/recaptcha" target="_blank">
+                    reCAPTCHA</a>.
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.SecuritySettings.CaptchaEnabled):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.SecuritySettings.CaptchaEnabled)
+                @Html.ValidationMessageFor(model => model.SecuritySettings.CaptchaEnabled)
+            </td>
+        </tr>
+        <tr id="ssCaptchaShowOnLoginPagepnl">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.SecuritySettings.CaptchaShowOnLoginPage):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.SecuritySettings.CaptchaShowOnLoginPage)
+                @Html.ValidationMessageFor(model => model.SecuritySettings.CaptchaShowOnLoginPage)
+            </td>
+        </tr>
+        <tr id="ssCaptchaShowOnRegistrationPagepnl">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.SecuritySettings.CaptchaShowOnRegistrationPage):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.SecuritySettings.CaptchaShowOnRegistrationPage)
+                @Html.ValidationMessageFor(model => model.SecuritySettings.CaptchaShowOnRegistrationPage)
+            </td>
+        </tr>
+        <tr id="ssCaptchaShowOnContactUsPagepnl">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.SecuritySettings.CaptchaShowOnContactUsPage):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.SecuritySettings.CaptchaShowOnContactUsPage)
+                @Html.ValidationMessageFor(model => model.SecuritySettings.CaptchaShowOnContactUsPage)
+            </td>
+        </tr>
+        <tr id="ssCaptchaShowOnEmailWishlistToFriendPagepnl">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.SecuritySettings.CaptchaShowOnEmailWishlistToFriendPage):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.SecuritySettings.CaptchaShowOnEmailWishlistToFriendPage)
+                @Html.ValidationMessageFor(model => model.SecuritySettings.CaptchaShowOnEmailWishlistToFriendPage)
+            </td>
+        </tr>
+        <tr id="ssCaptchaShowOnEmailProductToFriendPagepnl">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.SecuritySettings.CaptchaShowOnEmailProductToFriendPage):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.SecuritySettings.CaptchaShowOnEmailProductToFriendPage)
+                @Html.ValidationMessageFor(model => model.SecuritySettings.CaptchaShowOnEmailProductToFriendPage)
+            </td>
+        </tr>
+        <tr id="ssCaptchaShowOnBlogCommentPagepnl">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.SecuritySettings.CaptchaShowOnBlogCommentPage):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.SecuritySettings.CaptchaShowOnBlogCommentPage)
+                @Html.ValidationMessageFor(model => model.SecuritySettings.CaptchaShowOnBlogCommentPage)
+            </td>
+        </tr>
+        <tr id="ssCaptchaShowOnNewsCommentPagepnl">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.SecuritySettings.CaptchaShowOnNewsCommentPage):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.SecuritySettings.CaptchaShowOnNewsCommentPage)
+                @Html.ValidationMessageFor(model => model.SecuritySettings.CaptchaShowOnNewsCommentPage)
+            </td>
+        </tr>
+        <tr id="ssCaptchaShowOnProductReviewPagepnl">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.SecuritySettings.CaptchaShowOnProductReviewPage):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.SecuritySettings.CaptchaShowOnProductReviewPage)
+                @Html.ValidationMessageFor(model => model.SecuritySettings.CaptchaShowOnProductReviewPage)
+            </td>
+        </tr>
+        <tr id="ssReCaptchaPublicKeypnl">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.SecuritySettings.ReCaptchaPublicKey):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.SecuritySettings.ReCaptchaPublicKey)
+                @Html.ValidationMessageFor(model => model.SecuritySettings.ReCaptchaPublicKey)
+            </td>
+        </tr>
+        <tr id="ssReCaptchaPrivateKeypnl">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.SecuritySettings.ReCaptchaPrivateKey):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.SecuritySettings.ReCaptchaPrivateKey)
+                @Html.ValidationMessageFor(model => model.SecuritySettings.ReCaptchaPrivateKey)
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <hr />
+                <br />
+                <strong>@T("Admin.Configuration.Settings.GeneralCommon.SSLSettings")</strong>
+                <br />
+                <em>@T("Admin.Configuration.Settings.GeneralCommon.SSLSettings.Hint")</em>
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.SecuritySettings.UseSsl):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.SecuritySettings.UseSsl)
+                @Html.ValidationMessageFor(model => model.SecuritySettings.UseSsl)
+            </td>
+        </tr>
+        <tr id="ssSharedSslUrlpnl">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.SecuritySettings.SharedSslUrl):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.SecuritySettings.SharedSslUrl)
+                @Html.ValidationMessageFor(model => model.SecuritySettings.SharedSslUrl)
+            </td>
+        </tr>
+        <tr id="ssNonSharedSslUrlpnl">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.SecuritySettings.NonSharedSslUrl):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.SecuritySettings.NonSharedSslUrl)
+                @Html.ValidationMessageFor(model => model.SecuritySettings.NonSharedSslUrl)
+            </td>
+        </tr>
+    </table>
+}
+@helper TabPdfSettings()
+    {
+    <table class="adminContent">
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.PdfSettings.Enabled):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.PdfSettings.Enabled)
+                @Html.ValidationMessageFor(model => model.PdfSettings.Enabled)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.PdfSettings.LetterPageSizeEnabled):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.PdfSettings.LetterPageSizeEnabled)
+                @Html.ValidationMessageFor(model => model.PdfSettings.LetterPageSizeEnabled)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.PdfSettings.LogoPictureId):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.PdfSettings.LogoPictureId)
+                @Html.ValidationMessageFor(model => model.PdfSettings.LogoPictureId)
+            </td>
+        </tr>
+    </table>
+}
+@helper TabLocalizationSettings()
+    {
+    <table class="adminContent">
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.LocalizationSettings.UseImagesForLanguageSelection):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.LocalizationSettings.UseImagesForLanguageSelection)
+                @Html.ValidationMessageFor(model => model.LocalizationSettings.UseImagesForLanguageSelection)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.LocalizationSettings.SeoFriendlyUrlsForLanguagesEnabled):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.LocalizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
+                @Html.ValidationMessageFor(model => model.LocalizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
+            </td>
+        </tr>
+    </table>
+}
+@helper TabFullTextSettings()
+    {
+    <table class="adminContent">
+        <tr>
+            <td colspan="2">
+                @if (Model.FullTextSettings.Supported)
+                {
+                    @T("Admin.Configuration.Settings.GeneralCommon.FullTextSettings.Supported")
+                }
+                else
+                {
+                    @T("Admin.Configuration.Settings.GeneralCommon.FullTextSettings.NotSupported")
+                }
+            </td>
+        </tr>
+        @if (Model.FullTextSettings.Supported)
+        {
+            <tr>
+                <td colspan="2">
+                    @if (Model.FullTextSettings.Enabled)
+                    {
+                        @T("Admin.Configuration.Settings.GeneralCommon.FullTextSettings.CurrenlyEnabled")
+                    }
+                    else
+                    {
+                        @T("Admin.Configuration.Settings.GeneralCommon.FullTextSettings.CurrenlyDisabled")
+                    }
+                    <input type="submit" name="togglefulltext" value="@(Model.FullTextSettings.Enabled ? T("Admin.Configuration.Settings.GeneralCommon.FullTextSettings.Disable").Text : T("Admin.Configuration.Settings.GeneralCommon.FullTextSettings.Enable").Text)" class="adminButton" />
+                </td>
+            </tr>
+                    if (Model.FullTextSettings.Enabled)
+                    {
+            <tr>
+                <td class="adminTitle">
+                    @Html.NopLabelFor(model => model.FullTextSettings.SearchMode):
+                </td>
+                <td class="adminData">
+                    @(Html.Telerik().DropDownListFor(model => model.FullTextSettings.SearchMode)
+                            .BindTo(Model.FullTextSettings.SearchModeValues)
+                                .HtmlAttributes(new { style = "width:355px" })
+                    )
+                    @Html.ValidationMessageFor(model => model.FullTextSettings.SearchMode)
+                </td>
+            </tr>
+                    }
+        }
+    </table>
+}

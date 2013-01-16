@@ -1,0 +1,42 @@
+﻿@model CheckoutShippingMethodModel
+@using Nop.Web.Models.Checkout;
+<div class="checkout-data">
+    @Html.Widget("op_checkout_shipping_method_top")
+    <div class="shipping-options">
+        @if (Model.Warnings.Count == 0)
+        {
+            <div>
+                @for (int i = 0; i < Model.ShippingMethods.Count; i++)
+                {
+                    var shippingMethod = Model.ShippingMethods[i];
+                    <div class="shipping-option-item">
+                        <div class="option-name">
+                            <input id="shippingoption_@(i)" type="radio" name="shippingoption" value="@(shippingMethod.Name)___@(shippingMethod.ShippingRateComputationMethodSystemName)"  @(shippingMethod.Selected ? Html.Raw(" checked=\"checked\"") : null) />
+                            <label for="shippingoption_@(i)">@shippingMethod.Name (@shippingMethod.Fee)</label>
+                        </div>
+                        @if (!String.IsNullOrEmpty(shippingMethod.Description))
+                        {
+                            <div class="option-description">
+                                @Html.Raw(shippingMethod.Description)
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="clear">
+            </div>
+            <div class="message-error">
+                <ul>
+                    @for (int i = 0; i < Model.Warnings.Count; i++)
+                    {
+                        <li>@Model.Warnings[i]</li>
+                    }
+                </ul>
+            </div>
+        }
+    </div>
+    @Html.Widget("op_checkout_shipping_method_bottom")
+</div>

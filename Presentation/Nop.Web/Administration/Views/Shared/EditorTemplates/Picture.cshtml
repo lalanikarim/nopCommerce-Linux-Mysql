@@ -1,0 +1,65 @@
+﻿@model int
+@using Nop.Core;
+@using Nop.Web.Framework.UI;
+@{
+    //register CSS and JS
+    Html.AddCssFileParts(@Url.Content("~/Administration/Content/fileuploader.css"));
+    Html.AddScriptParts(@Url.Content("~/Administration/Scripts/fileuploader.js"));
+
+    //other variables
+    var random = CommonHelper.GenerateRandomInteger();
+    var clientId = "picture" + random;
+    var pictureService = EngineContext.Current.Resolve<Nop.Services.Media.IPictureService>();
+    var picture = pictureService.GetPictureById(Model);
+}
+<div id="@(clientId + "value")">
+    @Html.HiddenFor(x => x)
+</div>
+<div id="@(clientId + "image")">
+    <img src="@(pictureService.GetPictureUrl(Model, 100, true))" />
+</div>
+@if (picture != null)
+{
+    <span id="@(clientId + "remove")" class="t-button">@T("Admin.Picture.RemovePicture")</span>
+}
+else
+{
+    <span id="@(clientId + "remove")" class="t-button" style="display:none;">@T("Admin.Picture.RemovePicture")</span>
+}
+<br />
+<div id="@clientId">
+    <noscript>
+        <p>
+            Please enable JavaScript to use file uploader.</p>
+        <!-- or put a simple form for upload here -->
+    </noscript>
+</div>
+<script type="text/javascript">
+    $(function () {
+        $(function () {
+            var uploader@(clientId) = new qq.FileUploader({
+                element: document.getElementById('@clientId'),
+                action: '@(Url.Content("~/Admin/Picture/AsyncUpload"))',
+                onComplete: function(id, fileName, responseJSON){
+                    if (responseJSON.success) {
+                        $("#@(clientId + "image")").html("<img src='" + responseJSON.imageUrl + "'/>");
+                        $("#@(clientId + "value") input").val(responseJSON.pictureId);
+                        $("#@(clientId + "remove")").show();
+                    }
+                },
+                strings: {
+                    upload: "@T("Common.FileUploader.Upload")",
+                    drop: "@T("Common.FileUploader.DropFiles")",
+                    cancel: "@T("Common.FileUploader.Cancel")",
+                    failed: "@T("Common.FileUploader.Failed")"
+                }
+            });
+
+            $("#@(clientId + "remove")").click(function(e){
+                $("#@(clientId + "image")").html("<img src='@pictureService.GetDefaultPictureUrl()'/>");
+                $("#@(clientId + "value") input").val(0);
+                $(this).hide();
+            });
+        });
+    });
+</script>

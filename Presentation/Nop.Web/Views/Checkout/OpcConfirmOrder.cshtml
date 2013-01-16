@@ -1,0 +1,32 @@
+﻿@model CheckoutConfirmModel
+@using Nop.Core.Domain.Orders;
+@using Nop.Web.Models.Checkout;
+@using Nop.Web.Models.Common;
+<div class="checkout-data">
+    @Html.Widget("op_checkout_confirm_top")
+    <div>
+        @if (!String.IsNullOrEmpty(Model.MinOrderTotalWarning))
+        {
+            @Model.MinOrderTotalWarning
+        }
+    </div>
+    @if (Model.Warnings.Count > 0)
+    {
+        <div class="clear">
+        </div>
+        <div class="message-error">
+            <ul>
+                @for (int i = 0; i < Model.Warnings.Count; i++)
+                {
+                    <li>@Model.Warnings[i]</li>
+                }
+            </ul>
+        </div>
+    }
+    @Html.Widget("op_checkout_confirm_bottom")
+    <div class="clear">
+    </div>
+    <div class="order-summary-body">
+        @Html.Action("OrderSummary", "ShoppingCart", new { prepareAndDisplayOrderReviewData = true })
+    </div>
+</div>

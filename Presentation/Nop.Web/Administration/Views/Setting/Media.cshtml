@@ -1,0 +1,129 @@
+﻿@model MediaSettingsModel
+@using Telerik.Web.Mvc.UI;
+@{
+    //page title
+    ViewBag.Title = @T("Admin.Configuration.Settings.Media").Text;
+}
+@using (Html.BeginForm())
+{
+    <div class="section-header">
+        <div class="title">
+            <img src="@Url.Content("~/Administration/Content/images/ico-configuration.png")" alt="" />
+            @T("Admin.Configuration.Settings.Media")
+        </div>
+        <div class="options">
+            <input type="submit" name="save" class="t-button" value="@T("Admin.Common.Save")" />
+        </div>
+    </div>
+@Html.ValidationSummary(false)
+    <table class="adminContent">
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.PicturesStoredIntoDatabase):
+            </td>
+            <td class="adminData">
+                @if (Model.PicturesStoredIntoDatabase)
+                {
+                    @T("Admin.Configuration.Settings.Media.PicturesStoredIntoDatabase.Database")
+                }
+                else
+                {
+                    @T("Admin.Configuration.Settings.Media.PicturesStoredIntoDatabase.FileSystem")
+                }
+                
+            <input type="submit" name="change-picture-storage" class="t-button" onclick="return confirm('@T("Admin.Common.AreYouSure")');" value="@T("Admin.Configuration.Settings.Media.PicturesStoredIntoDatabase.Change")" />
+            NOTE: Do not forget to backup your database before changing this option.
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.AvatarPictureSize):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.AvatarPictureSize)
+                @Html.ValidationMessageFor(model => model.AvatarPictureSize)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.ProductThumbPictureSize):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.ProductThumbPictureSize)
+                @Html.ValidationMessageFor(model => model.ProductThumbPictureSize)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.ProductDetailsPictureSize):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.ProductDetailsPictureSize)
+                @Html.ValidationMessageFor(model => model.ProductDetailsPictureSize)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.ProductThumbPictureSizeOnProductDetailsPage):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.ProductThumbPictureSizeOnProductDetailsPage)
+                @Html.ValidationMessageFor(model => model.ProductThumbPictureSizeOnProductDetailsPage)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.ProductVariantPictureSize):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.ProductVariantPictureSize)
+                @Html.ValidationMessageFor(model => model.ProductVariantPictureSize)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.CategoryThumbPictureSize):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.CategoryThumbPictureSize)
+                @Html.ValidationMessageFor(model => model.CategoryThumbPictureSize)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.ManufacturerThumbPictureSize):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.ManufacturerThumbPictureSize)
+                @Html.ValidationMessageFor(model => model.ManufacturerThumbPictureSize)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.CartThumbPictureSize):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.CartThumbPictureSize)
+                @Html.ValidationMessageFor(model => model.CartThumbPictureSize)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.MiniCartThumbPictureSize):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.MiniCartThumbPictureSize)
+                @Html.ValidationMessageFor(model => model.MiniCartThumbPictureSize)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.MaximumImageSize):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.MaximumImageSize)
+                @Html.ValidationMessageFor(model => model.MaximumImageSize)
+            </td>
+        </tr>
+    </table>
+}

@@ -1,0 +1,46 @@
+﻿@model Telerik.Web.Mvc.GridModel<CheckoutAttributeModel>
+@using Telerik.Web.Mvc.UI
+
+@{
+    //page title
+    ViewBag.Title = @T("Admin.Catalog.Attributes.CheckoutAttributes").Text;
+}
+<div class="section-header">
+    <div class="title">
+        <img src="@Url.Content("~/Administration/Content/images/ico-catalog.png")" alt="" />
+        @T("Admin.Catalog.Attributes.CheckoutAttributes")
+    </div>
+    <div class="options">
+        <a href="@Url.Action("Create")" class="t-button">@T("Admin.Common.AddNew")</a>
+    </div>
+</div>
+<table class="adminContent">
+    <tr>
+        <td>
+            @(Html.Telerik().Grid<CheckoutAttributeModel>(Model.Data)
+                    .Name("checkoutattributes-grid")
+                    .Columns(columns =>
+                    {
+                        columns.Bound(x => x.Name)
+                            .Width(300);
+                        columns.Bound(x => x.AttributeControlTypeName)
+                            .Width(150);
+                        columns.Bound(x => x.IsRequired)
+                            .Width(100)
+                            .Template(x => x.IsRequired.ToString().ToLower())
+                            .Centered();
+                        columns.Bound(x => x.DisplayOrder)
+                            .Width(100)
+                            .Centered();
+                        columns.Bound(x => x.Id)
+                            .Width(50)
+                            .Centered()
+                            .Template(x => Html.ActionLink(T("Admin.Common.Edit").Text, "Edit", new { id = x.Id }))
+                            .ClientTemplate("<a href=\"Edit/<#= Id #>\">" + T("Admin.Common.Edit").Text + "</a>")
+                            .Title(T("Admin.Common.Edit").Text);
+                    })
+                            .DataBinding(dataBinding => dataBinding.Ajax().Select("List", "CheckoutAttribute"))
+                            .EnableCustomBinding(true))
+        </td>
+    </tr>
+</table>

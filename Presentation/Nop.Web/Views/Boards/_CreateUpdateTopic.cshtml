@@ -1,0 +1,95 @@
+﻿@model EditForumTopicModel
+@using Nop.Core.Domain.Forums;
+@using Nop.Services.Forums;
+@using Nop.Services.Seo;
+@using Nop.Web;
+@using Nop.Web.Extensions;
+@using Nop.Web.Models.Boards;
+@using (Html.BeginForm())
+{
+    <div class="page post-edit">
+        @Html.Action("ForumBreadcrumb", new { forumId = Model.ForumId, forumTopicId = Model.Id })
+    <div class="clear">
+    </div>
+        <div class="title">
+            @if (Model.IsEdit)
+            {
+                @T("Forum.EditTopic")
+            }
+            else
+            {
+                @T("Forum.NewTopic")
+            }
+        </div>
+        <div class="wrapper">
+            <div class="message-error">
+                @Html.ValidationSummary(true)
+            </div>
+            @Html.HiddenFor(model => model.Id)
+            @Html.HiddenFor(model => model.ForumId)
+            <div class="clear">
+            </div>
+            <table class="post-topic">
+                <tr>
+                    <td class="fieldname">
+                        @T("Forum.ForumName"):
+                    </td>
+                    <td>
+                        @Model.ForumName
+                    </td>
+                </tr>
+                <tr>
+                    <td class="fieldname">
+                        @T("Forum.TopicTitle"):
+                    </td>
+                    <td>
+                        @Html.TextBoxFor(model => model.Subject, new { @class = "forum-topic-title-text" })
+                        @Html.ValidationMessageFor(model => model.Subject)
+                    </td>
+                </tr>
+                <tr>
+                    <td class="fieldname">
+                    </td>
+                    <td>
+                        @if (Model.ForumEditor == EditorType.BBCodeEditor)
+                        {
+                            @Html.BBCodeEditor("Text");
+                        }
+                        @Html.TextAreaFor(model => model.Text, new { @class = "forum-post-text", TextMode = "MultiLine" })
+                        @Html.ValidationMessageFor(model => model.Text)
+                    </td>
+                </tr>
+                @if (Model.IsCustomerAllowedToSetTopicPriority)
+                {
+                    <tr>
+                        <td class="fieldname">
+                            @T("Forum.Priority"):
+                        </td>
+                        <td>
+                            @Html.DropDownList("TopicTypeId", new SelectList(@Model.TopicPriorities, "Value", "Text", @Model.TopicTypeId))
+                        </td>
+                    </tr>
+                }
+                @if (Model.IsCustomerAllowedToSubscribe)
+                {
+                    <tr>
+                        <td class="fieldname">
+                            @T("Forum.Options"):
+                        </td>
+                        <td>
+                            @Html.EditorFor(model => model.Subscribed)
+                            @Html.LabelFor(model => model.Subscribed, @T("Forum.NotifyWhenSomeonePostsInThisTopic").Text)
+                        </td>
+                    </tr>
+                }
+                <tr>
+                    <td colspan="2" class="options">
+                        <input type="submit" value="@T("Forum.Submit")" class="button-1 submit-forum-topic-button" />
+                        <input type="button" class="button-2 cancel-forum-topic-button" value="@T("Forum.Cancel")" 
+                        onclick="setLocation('@Url.RouteUrl("ForumSlug", new { id = @Model.ForumId, slug = @Model.ForumSeName })')" />
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+}

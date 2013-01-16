@@ -1,0 +1,31 @@
+﻿@model BoardsIndexModel
+@using Nop.Core.Infrastructure;
+@using Nop.Services.Helpers;
+@using Nop.Web.Models.Boards;
+@{
+    Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+
+    Html.AddTitleParts(T("Forum.PageTitle.Default").Text);
+}
+<div class="page forums-main">
+    <div>
+        @Html.Action("TopicBlock", "Topic", new { systemName = "ForumWelcomeMessage" })
+    </div>
+    <div class="clear">
+    </div>
+    <div class="forums-main-header">
+        <div class="current-time">
+            @Model.CurrentTime.ToString("F")
+        </div>
+        @Html.Partial("_SearchBox")
+    </div>
+    <div class="clear">
+    </div>
+    @foreach (var forumGroup in Model.ForumGroups)
+    {
+        Html.RenderPartial("_ForumGroup", forumGroup);
+    }
+    <div class="clear">
+    </div>
+    @Html.Action("ActiveDiscussionsSmall")
+</div>

@@ -1,0 +1,24 @@
+﻿@model IList<CategoryNavigationModel>
+@using Nop.Core.Domain.Catalog;
+@using Nop.Web.Models.Catalog;
+@if (Model.Count > 0)
+{
+    <div class="block block-category-navigation">
+        <div class="title">
+            @T("Categories")
+        </div>
+        <ul data-role="listview" data-inset="true" data-filter="false">
+            @foreach (var category in Model)
+            {
+                <li><a href="@Url.RouteUrl("Category", new { categoryId = category.Id, SeName = category.SeName })">
+                    @category.Name
+                    @*uncomment to show number of products                    
+                    @if (category.DisplayNumberOfProducts)
+                    {
+                        <span class="ui-li-count">@(category.NumberOfProducts)</span>
+                    }*@
+                </a></li>
+            }
+        </ul>
+    </div>
+}

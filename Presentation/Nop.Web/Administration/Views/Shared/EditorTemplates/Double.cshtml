@@ -1,0 +1,9 @@
+@model System.Double
+@using Telerik.Web.Mvc.UI
+
+@(Html.Telerik().NumericTextBox()
+        .Name(ViewData.TemplateInfo.GetFullHtmlFieldName(string.Empty))
+            .Value(Model)
+            .DecimalDigits(4)   //always display 4 digits
+)
+

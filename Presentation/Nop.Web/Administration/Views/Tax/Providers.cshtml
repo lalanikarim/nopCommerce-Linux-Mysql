@@ -1,0 +1,50 @@
+﻿@model Telerik.Web.Mvc.GridModel<TaxProviderModel>
+@using Telerik.Web.Mvc.UI
+@{    
+    //page title
+    ViewBag.Title = @T("Admin.Configuration.Tax.Providers").Text;
+}
+<div class="section-header">
+    <div class="title">
+        <img src="@Url.Content("~/Administration/Content/images/ico-configuration.png")" alt="" />
+        @T("Admin.Configuration.Tax.Providers")
+    </div>
+</div>
+<table class="adminContent">
+    <tr>
+        <td>
+            @(Html.Telerik().Grid<TaxProviderModel>()
+                    .Name("taxProviders-grid")
+                    .DataKeys(x =>
+                    {
+                        x.Add(y => y.SystemName).RouteKey("systemName");
+                    })
+                    .BindTo(Model.Data)
+                    .Columns(columns =>
+                    {
+                        columns.Bound(x => x.FriendlyName).Width(250);
+                        columns.Bound(x => x.IsPrimaryTaxProvider)
+                            .Template(x => x.IsPrimaryTaxProvider.ToString().ToLower())
+                            .Width(100)
+                            .ReadOnly();
+                        columns.Command(commands => commands.Select())
+                            .Title(T("Admin.Configuration.Tax.Providers.Fields.MarkAsPrimaryProvider").Text).Width(100);
+                        columns.Template(
+                                @<div>
+                                    @Html.ActionLink(T("Admin.Configuration.Tax.Providers.Configure").Text, "ConfigureProvider", new { systemName = @item.SystemName })
+                                </div>
+                            )
+                            .ClientTemplate("<a href=\"ConfigureProvider?systemName=<#= SystemName #>\">" + T("Admin.Configuration.Tax.Providers.Configure").Text + "</a>")
+                            .Width(100)
+                            .Centered()
+                            .Title(T("Admin.Configuration.Tax.Providers.Configure").Text);
+                        columns.Bound(x => x.SystemName).Width(250);
+                    })
+                    .DataBinding(dataBinding =>
+                    {
+                        dataBinding.Ajax().Select("Providers", "Tax");
+                    })
+                    .EnableCustomBinding(true))
+        </td>
+    </tr>
+</table>

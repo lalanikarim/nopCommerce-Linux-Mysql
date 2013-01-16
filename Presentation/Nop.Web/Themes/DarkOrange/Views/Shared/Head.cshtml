@@ -1,0 +1,14 @@
+﻿@using Nop.Core;
+@using Nop.Core.Infrastructure;
+@{
+    var supportRtl = EngineContext.Current.Resolve<IWorkContext>().WorkingLanguage.Rtl;
+}
+@if (supportRtl)
+{
+    //this theme supports RTL
+    Html.AppendCssFileParts(Url.Content("~/Themes/DarkOrange/Content/styles.rtl.css"));
+}
+else
+{
+    Html.AppendCssFileParts(Url.Content("~/Themes/DarkOrange/Content/styles.css"));
+}
