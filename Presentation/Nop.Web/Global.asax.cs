@@ -19,6 +19,8 @@ using Nop.Web.Framework.Mvc.Routes;
 using Nop.Web.Framework.Themes;
 using StackExchange.Profiling;
 using StackExchange.Profiling.MVCHelpers;
+using System.Web.WebPages.Scope;
+using System.Reflection;
 
 namespace Nop.Web
 {
@@ -120,6 +122,9 @@ namespace Nop.Web
 
         protected void Application_BeginRequest(object sender, EventArgs e)
         {
+			var ob = typeof(AspNetRequestScopeStorageProvider).Assembly.GetType("System.Web.WebPages.WebPageHttpModule").GetProperty("AppStartExecuteCompleted", BindingFlags.NonPublic | BindingFlags.Static);
+			ob.SetValue(null, true,null);
+
             EnsureDatabaseIsInstalled();
 
             if (DataSettingsHelper.DatabaseIsInstalled() && 
@@ -155,7 +160,7 @@ namespace Nop.Web
         protected void EnsureDatabaseIsInstalled()
         {
             var webHelper = EngineContext.Current.Resolve<IWebHelper>();
-            string installUrl = string.Format("{0}install", webHelper.GetStoreLocation());
+            string installUrl = string.Format("{0}Install", webHelper.GetStoreLocation());
             if (!webHelper.IsStaticResource(this.Request) &&
                 !DataSettingsHelper.DatabaseIsInstalled() &&
                 !webHelper.GetThisPageUrl(false).StartsWith(installUrl, StringComparison.InvariantCultureIgnoreCase))
