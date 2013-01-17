@@ -316,7 +316,11 @@ namespace Nop.Core
             {
                 //not hosted. For example, run in unit tests
                 string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
-                path = path.Replace("~/", "").TrimStart('/').Replace('/', '\\');
+				path = path.Replace("~/", "").TrimStart('/');
+				if(Environment.OSVersion.Platform != PlatformID.Unix)
+				{
+                	path = path.Replace('/', '\\');
+				}
                 return Path.Combine(baseDirectory, path);
             }
         }
